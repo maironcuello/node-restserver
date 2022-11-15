@@ -1,32 +1,35 @@
 const { Router} = require('express');
 const { check } = require('express-validator');
 const { userGet, userPost, userPut, userPatch ,userDelete } = require('../controllers/user.controller');
+const { rolValidators, emailValidator, userById  } = require('../helpers/db-validator');
+const { validatorInfo } = require('../middleware/user-validator');
 
 const router = Router();
 
 router.get('/', userGet);
-router.post('/',[
-    // To use express-validator 
-    check('name').not().isEmpty().withMessage({
-      message: 'Not a name',
-        errorCode: 1,
-    }),
-    check('password').isLength({min:6}).withMessage({
-      message: 'Password minemoun six letter ',
-        errorCode: 2,
-    }),
-    check('email').isEmail().withMessage({
-        message: 'Not an email',
-        errorCode: 3,
-      }),
-    check('rol','Its not a valid rol').isIn('ADMIN_ROL','USER_ROL').withMessage({
-        message: 'Not is valid rol',
-        errorCode: 4,
-      })
-] ,userPost);
-router.put('/:id', userPut);
-router.patch('/', userPatch);
-router.delete('/', userDelete);
+router.post('/',[ // To use express-validator 
+  check('name').not().isEmpty(),
+  check('password').isLength({min:6}),
+  check('email').custom(emailValidator).isEmail(),
+  check('rol').custom( rolValidators),
+  //Take data from body and validator it's not empty or wrong information  
+  validatorInfo
+],userPost );
 
+router.put('/:id',[
+  // checking if is an id valid
+  // checking if there an user with this id. userById   
+  check('id','Its not valid id').isMongoId(),
+  check('id').custom(userById),
+  check('rol').custom( rolValidators),
+  validatorInfo
+], userPut);
+
+router.delete('/:id',[
+  check('id','Its not valid id').isMongoId(),
+  check('id').custom(userById),
+  validatorInfo
+], userDelete);
+router.patch('/', userPatch); 
 
 module.exports = router;
