@@ -2,7 +2,7 @@ require('../server/config/config');
 
 const express = require('express');
 const cors = require('cors');
-const { dbConnection } = require('../database/config');
+const { dbConnection } = require('../database/config.database');
 
 
 class Server {
@@ -10,8 +10,8 @@ class Server {
     
         this.app = express();
         this.port = process.env.PORT;
-        this.userPath = '/api/users'
-
+        this.userPath = '/api/users';
+        this.authPath = '/api/auth';
         //Database connection 
         this.connectDB(); 
         // Middleware
@@ -34,7 +34,10 @@ class Server {
         this.app.use(express.static('public'));
     }
 
-    routes() {this.app.use(this.userPath, require('../routes/user.routes'));}
+    routes() {
+        this.app.use(this.authPath, require('../routes/auth.routes'));
+        this.app.use(this.userPath, require('../routes/user.routes'));
+    }
     listen() {this.app.listen(this.port), console.log(` Server running on local port ${this.port}`);}
 }
  

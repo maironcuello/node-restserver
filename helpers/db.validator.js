@@ -1,5 +1,5 @@
-const Role = require('../models/role');
-const User = require('../models/user');
+const Role = require('../models/role.model');
+const User = require('../models/user.model');
 
 // In this part, We verification whit email no registered in database
 const emailValidator = async (email) => {

@@ -1,6 +1,5 @@
 const bcryptjs = require('bcryptjs');
-// const bcrypt = require('bcryptjs/dist/bcrypt');
-const User = require('../models/user');
+const User = require('../models/user.model');
 const { request, response } = require('express');
 
 const userGet = async(req = request, res = response) =>  {
@@ -63,17 +62,17 @@ const userDelete = async (req, res = response) => {
     //  -----------------------------------------------------
     const { id } = req.params;
     const user = await User.findByIdAndUpdate(id, { state: false} );
-    
+    const userAuthenticated = req.user;    
     //  -----------------------------------------------------
     // Delete user to mongodb
     //  -----------------------------------------------------
     // const user = await User.findByIdAndDelete( id );
-    res.json({user})
+    res.json({user, userAuthenticated})
     //  -----------------------------------------------------
 };
 
 
-const userPatch     = (req, res = response) => res.json({"msg": "PATH api from  user controller"});
+const userPatch = (req, res = response) => res.json({"msg": "PATH api from  user controller"});
 
 module.exports = {
     userGet,

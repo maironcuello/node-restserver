@@ -1,9 +1,14 @@
+// FrameWorks ---------------------------------------------------
 const { Router} = require('express');
 const { check } = require('express-validator');
+// Controllers ---------------------------------------------------
 const { userGet, userPost, userPut, userPatch ,userDelete } = require('../controllers/user.controller');
-const { rolValidators, emailValidator, userById  } = require('../helpers/db-validator');
-const { validatorInfo } = require('../middleware/user-validator');
-
+// Helpers ---------------------------------------------------
+const { rolValidators, emailValidator, userById  } = require('../helpers/db.validator');
+// Middleware ------------------------------------------------
+const { validateJwt } = require('../middleware/jwt.middleware');
+const { validatorInfo } = require('../middleware/user.validator');
+// Routers ------------------------------------------------
 const router = Router();
 
 router.get('/', userGet);
@@ -26,6 +31,7 @@ router.put('/:id',[
 ], userPut);
 
 router.delete('/:id',[
+  validateJwt,
   check('id','Its not valid id').isMongoId(),
   check('id').custom(userById),
   validatorInfo
