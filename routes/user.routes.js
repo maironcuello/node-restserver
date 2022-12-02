@@ -6,12 +6,11 @@ const { userGet, userPost, userPut, userPatch ,userDelete } = require('../contro
 // Helpers ---------------------------------------------------
 const { rolValidators, emailValidator, userById  } = require('../helpers/db.validator');
 // Middleware ------------------------------------------------
-const { validateJwt } = require('../middleware/jwt.middleware');
-const { validatorInfo } = require('../middleware/user.validator');
+const {validateJwt, validatorInfo, hasRole, adminRole } = require('../middleware')
 // Routers ------------------------------------------------
 const router = Router();
 
-router.get('/', userGet);
+router.get('/',userGet);
 router.post('/',[ // To use express-validator 
   check('name').not().isEmpty(),
   check('password').isLength({min:6}),
@@ -32,6 +31,8 @@ router.put('/:id',[
 
 router.delete('/:id',[
   validateJwt,
+  // adminRole,
+  hasRole('ADMIN_ROLE','VENTAS_ROLE'),
   check('id','Its not valid id').isMongoId(),
   check('id').custom(userById),
   validatorInfo

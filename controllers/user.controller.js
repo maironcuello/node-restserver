@@ -5,7 +5,6 @@ const { request, response } = require('express');
 const userGet = async(req = request, res = response) =>  {
     const {  limit, from } = req.query;
     const query = { state: true };
-    
     const [ getTotalIndex, getUser ] = await Promise.all([
         // get number of register
         User.countDocuments(query),
@@ -17,12 +16,11 @@ const userGet = async(req = request, res = response) =>  {
     // .then(value => res.json({value}))
     // .catch(reason => {console.log(reason)});  
         
-    if(limit != null ){ 
-        getIndexConsult = parseInt( limit )
-    }else{ 
-         getIndexConsult = parseInt( from )
-    };
-
+    // if(limit != null ){ 
+    //     getIndexConsult = parseInt( limit )
+    // }else{ 
+    //      getIndexConsult = parseInt( from )
+    // };
     res.json({
         getTotalIndex,
         getIndexConsult,
@@ -57,24 +55,21 @@ const userPut = async(req, res = response) => {
 }
 
 const userDelete = async (req, res = response) => {
-    //  -----------------------------------------------------
     // Updated user how to state = false
-    //  -----------------------------------------------------
     const { id } = req.params;
+
+    // TODO Pending a validation
+
     const user = await User.findByIdAndUpdate(id, { state: false} );
     const userAuthenticated = req.user;    
-    //  -----------------------------------------------------
     // Delete user to mongodb
-    //  -----------------------------------------------------
-    // const user = await User.findByIdAndDelete( id );
     res.json({user, userAuthenticated})
-    //  -----------------------------------------------------
 };
 
 
 const userPatch = (req, res = response) => res.json({"msg": "PATH api from  user controller"});
 
-module.exports = {
+module.exports = { 
     userGet,
     userPost,
     userPut,
