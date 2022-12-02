@@ -15,7 +15,8 @@ const userGet = async(req = request, res = response) =>  {
     ])
     // .then(value => res.json({value}))
     // .catch(reason => {console.log(reason)});  
-        
+    
+    // TODO NEED - CREATE METHOD FOR COUNT REGISTER ACTIVE NUMBERS IN RESPONSE
     // if(limit != null ){ 
     //     getIndexConsult = parseInt( limit )
     // }else{ 
@@ -23,7 +24,7 @@ const userGet = async(req = request, res = response) =>  {
     // };
     res.json({
         getTotalIndex,
-        getIndexConsult,
+        // getIndexConsult,
         getUser
         // totalRegisters,
         // getUsers
